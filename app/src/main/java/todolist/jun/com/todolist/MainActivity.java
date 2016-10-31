@@ -1,5 +1,7 @@
 package todolist.jun.com.todolist; // This reflect the package name
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
@@ -9,13 +11,19 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.util.Log;
 
+import todolist.jun.com.todolist.db.TaskContract;
+import todolist.jun.com.todolist.db.TaskDbHelper;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    private TaskDbHelper mHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mHelper = new TaskDbHelper(this);
     }
 
     @Override
@@ -39,6 +47,14 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 String task = String.valueOf(taskEditText.getText());
                                 Log.d(TAG, "Task to add: " + task);
+                                SQLiteDatabase db = mHelper.getWritableDatabase();
+                                ContentValues values = new ContentValues();
+                                values.put(TaskContract.TaskEntry.COL_TASK_TITLE, task);
+                                db.insertWithOnConflict(TaskContract.TaskEntry.TABLE,
+                                        null,
+                                        values,
+                                        SQLiteDatabase.CONFLICT_REPLACE);
+                                db.close();
                             }
                         })
                         .setNegativeButton("Cancel", null)
