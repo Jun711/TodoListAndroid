@@ -3,6 +3,7 @@ package todolist.jun.com.todolist; // This reflect the package name
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
@@ -110,14 +111,15 @@ public class MainActivity extends AppCompatActivity {
     public void deleteTask(View view) {
         View parent = (View) view.getParent();
         TextView taskTextView = (TextView) parent.findViewById(R.id.task_title);
-        String task = String.valueOf(taskTextView.getText());
-        SQLiteDatabase db = mHelper.getWritableDatabase();
-        db.delete(TaskContract.TaskEntry.TABLE,
-                TaskContract.TaskEntry.COL_TASK_TITLE + " = ?",
-                new String[]{task});
-        //delete(String table, String whereClause, String[] whereArgs)
-//        Convenience method for deleting rows in the database.
-        db.close();
-        updateUI();
+        taskTextView.setPaintFlags(taskTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//        String task = String.valueOf(taskTextView.getText());
+//        SQLiteDatabase db = mHelper.getWritableDatabase();
+//        db.delete(TaskContract.TaskEntry.TABLE,
+//                TaskContract.TaskEntry.COL_TASK_TITLE + " = ?",
+//                new String[]{task});
+//        //delete(String table, String whereClause, String[] whereArgs)
+////        Convenience method for deleting rows in the database.
+//        db.close();
+//        updateUI();
     }
 }
